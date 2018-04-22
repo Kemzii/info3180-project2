@@ -22,10 +22,55 @@ def home():
     return render_template('home.html')
 
 
-@app.route('/about/')
-def about():
-    """Render the website's about page."""
-    return render_template('about.html', name="Mary Jane")
+@app.route('/api/users/register', methods=['GET', 'POST'])
+def register():
+    """Render the website's register page."""
+    
+    myform = MyForm()
+    
+    if request.method == 'POST':
+        if myform.validate_on_submit():
+        
+            username = myform.username.data
+            password = myform.password.data
+            firstname = myform.firstname.data
+            lastname = myform.lastname.data
+            email = myform.email.data
+            location = myform.location.data
+            biography = myform.biography.data
+            gender = myform.gender.data
+            photo = myform.photo.data
+           
+            filename = secure_filename(photo.filename)
+            photo.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            
+            userid = random.getrandbits(16) #str(uuid.uuid4())
+            created_on = format_date_joined()
+            
+            #db = connect_db()
+            #cur = db.cursor()
+            #query = "insert into Profiles (firstname, lastname, email, location, biography, gender, photo, userid, created_on) values (%s, %s, %s, %s, %s, %s, %s, %s, %s);"
+            #data = (firstname, lastname, email, location, biography, gender, filename, userid, created_on)
+            #cur.execute(query, data)
+            #db.commit()
+            
+            new_profile = FormData(firstname=firstname, lastname=lastname, email=email, location=location, biography=biography, gender=gender, photo=filename, userid=userid, created_on=created_on)
+            db.session.add(new_profile)
+            db.session.commit()
+            
+            flash('Profile successfully added!', 'success')
+            return redirect(url_for("profiles"))
+
+        flash_errors(myform)
+    return render_template('profile.html', form=myform)
+    
+    
+    
+    
+    
+
+
+
 
 
 ###
