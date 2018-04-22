@@ -5,10 +5,13 @@ Werkzeug Documentation:  http://werkzeug.pocoo.org/documentation/
 This file creates your application.
 """
 
-from app import app
-from flask import render_template, request, redirect, url_for, flash
+import os, uuid, time, psycopg2, random
+from app import app, db, login_manager
+from flask import render_template, request, redirect, url_for, flash, session, abort
+from werkzeug.utils import secure_filename
 
-
+from forms import MyForm
+from models import Users, Posts, Likes, Follows
 ###
 # Routing for your application.
 ###

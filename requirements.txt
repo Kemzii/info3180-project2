@@ -6,3 +6,9 @@ click==6.7
 gunicorn==19.6.0
 itsdangerous==0.24
 wsgiref==0.1.2
+Flask-Login
+Flask-Migrate
+Flask-Script
+Flask-WTF
+Flask-SQLAlchemy
+psycopg2
