@@ -1,11 +1,11 @@
 from . import db
-
+from werkzeug.security import generate_password_hash, check_password_hash
 
 class Users(db.Model):
     __tablename__ = 'users'
     
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(80))
+    username = db.Column(db.String(80), unique=True)
     password = db.Column(db.String(80))
     firstname = db.Column(db.String(80))
     lastname = db.Column(db.String(80))
@@ -33,6 +33,16 @@ class Users(db.Model):
 
     def __repr__(self):
         return '<User %r>' % (self.firstname)
+        
+    def __init__(self, password, **kwargs):
+        super(Users, self).__init__(**kwargs)
+        self.set_password(password)
+
+    def set_password(self, password):
+        self.pw_hash = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.pw_hash, password)
         
 
 class Posts(db.Model):

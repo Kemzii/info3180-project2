@@ -9,6 +9,8 @@ import os, uuid, time, psycopg2, random
 from app import app, db, login_manager
 from flask import render_template, request, redirect, url_for, flash, session, abort
 from werkzeug.utils import secure_filename
+from werkzeug.security import check_password_hash
+from flask_login import login_user, logout_user, current_user, login_required
 
 from forms import MyForm
 from models import Users, Posts, Likes, Follows
@@ -17,9 +19,9 @@ from models import Users, Posts, Likes, Follows
 ###
 
 @app.route('/')
-def home():
-    """Render website's home page."""
-    return render_template('home.html')
+def index():
+    """Render website's initial page and let VueJS take over."""
+    return render_template('index.html')
 
 
 @app.route('/api/users/register', methods=['GET', 'POST'])
@@ -38,44 +40,41 @@ def register():
             email = myform.email.data
             location = myform.location.data
             biography = myform.biography.data
-            gender = myform.gender.data
             photo = myform.photo.data
            
             filename = secure_filename(photo.filename)
             photo.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             
-            userid = random.getrandbits(16) #str(uuid.uuid4())
-            created_on = format_date_joined()
+            id = random.getrandbits(16) #str(uuid.uuid4())
+            joined_on = format_date_joined()
+     
             
-            #db = connect_db()
-            #cur = db.cursor()
-            #query = "insert into Profiles (firstname, lastname, email, location, biography, gender, photo, userid, created_on) values (%s, %s, %s, %s, %s, %s, %s, %s, %s);"
-            #data = (firstname, lastname, email, location, biography, gender, filename, userid, created_on)
-            #cur.execute(query, data)
-            #db.commit()
-            
-            new_profile = FormData(firstname=firstname, lastname=lastname, email=email, location=location, biography=biography, gender=gender, photo=filename, userid=userid, created_on=created_on)
-            db.session.add(new_profile)
+            new_user = Users(username=username, password=password, firstname=firstname, lastname=lastname, email=email, location=location, biography=biography, photo=filename, id=id, joined_on=joined_on)
+            db.session.add(new_user)
             db.session.commit()
             
-            flash('Profile successfully added!', 'success')
-            return redirect(url_for("profiles"))
+            flash('Registration Successful!', 'success')
+            return redirect(url_for('/api/auth/login'))
 
         flash_errors(myform)
-    return render_template('profile.html', form=myform)
+    return render_template('index.html', form=myform)
     
-    
-    
-    
-    
-
-
-
-
 
 ###
 # The functions below should be applicable to all Flask apps.
 ###
+def format_date_joined():
+    """format date"""
+    dtime = time.strftime("%B %d, %Y")
+    return dtime
+
+def flash_errors(form):
+    for field, errors in form.errors.items():
+        for error in errors:
+            flash(u"Error in the %s field - %s" % (
+                getattr(form, field).label.text,
+                error
+            ), 'danger')
 
 @app.route('/<file_name>.txt')
 def send_text_file(file_name):
