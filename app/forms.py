@@ -3,7 +3,7 @@ from wtforms import Form, TextField, TextAreaField, validators, SelectField, Pas
 from wtforms.validators import DataRequired, Email
 from flask_wtf.file import FileField, FileRequired, FileAllowed
 
-class MyForm(FlaskForm):
+class RegForm(FlaskForm):
     username = TextField('Username', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
     firstname = TextField('First Name', validators=[DataRequired()])
@@ -16,3 +16,6 @@ class MyForm(FlaskForm):
         FileAllowed(['jpg', 'png', 'Images only!'])
     ])
     
+class LoginForm(FlaskForm):
+    username = TextField('Username', validators=[DataRequired()])
+    password = TextField('Password', validators=[DataRequired()])

@@ -1,6 +1,84 @@
-img {
-    width: 5px;
-    height: 5px;
-    padding: 5px;
-    border-radius: 5px;
+.form {
+    margin: auto;
+    width: 50%;
+    border: 2px solid #a6a7a8;
+    padding: 10px;
+}
+
+.icon {
+    width: 3%;
+    height: 3%;
+    padding: 3px;
+}
+
+.homeicon {
+    width: 15%;
+    height: 15%;
+    padding: 3px;
+}
+
+header li {
+    display: inline-block;
+}
+header ul {
+    white-space:nowrap
+}
+.home {
+    margin: auto;
+    width: 80%;
+}
+
+.inbl {
+    display: inline-block;
+    width: 350px;
+    height: 200px;
+    margin: 10px;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #a6a7a8; 
+    float: left;
+}
+#inbl1 {
+    display: inline-block;
+    float: left;
+    margin: auto;  
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 155px;
+    bottom: 0;
+}
+
+#spesh {
+    position: relative;
+    display: inline-block;
+    text-align: center;
+    width: 350px;
+    height: 200px;
+    margin: 10px;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #a6a7a8; 
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    float: left;
+    
+}
+
+.homeimg {
+    display: block;
+    width: 100%;
+    padding: 3px;
+    
+}
+#links {
+    float: right;
+}
+
+footer
+{
+    clear: both;
+}
+
+#gram {
+    font-family: 'Lobster', cursive;
 }

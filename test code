@@ -1,0 +1,12 @@
+    <ul class="navbar-nav">
+      <div v-if="isLoggedIn">
+        <li class="nav-item active">
+              <router-link class="nav-link" to="/logout">Logout<span class="sr-only">(current)</span></router-link>
+            </li>
+      </div>
+      <div v-else>
+        <li class="nav-item active">
+              <router-link class="nav-link" to="/login">Login<span class="sr-only">(current)</span></router-link>
+            </li>
+      </div>
+    </ul>

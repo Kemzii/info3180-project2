@@ -7,58 +7,98 @@ This file creates your application.
 
 import os, uuid, time, psycopg2, random
 from app import app, db, login_manager
-from flask import render_template, request, redirect, url_for, flash, session, abort
+from flask import render_template, request, redirect, url_for, flash, session, abort, jsonify
 from werkzeug.utils import secure_filename
 from werkzeug.security import check_password_hash
 from flask_login import login_user, logout_user, current_user, login_required
 
-from forms import MyForm
+from forms import RegForm, LoginForm
 from models import Users, Posts, Likes, Follows
 ###
 # Routing for your application.
 ###
 
 @app.route('/')
-def index():
-    """Render website's initial page and let VueJS take over."""
-    return render_template('index.html')
+def home():
+    """Render website's home page with vuejs."""
+    return render_template('home.html')
+
+
+@app.route("/api/auth/login", methods=["GET", "POST"])
+def login():
+    """Render the website's login page."""
+    myform = LoginForm()
+    if request.method == "POST" and myform.validate_on_submit():
+       
+        if myform.username.data:
+            # Get the username and password values from the form.
+            username=myform.username.data
+            password=myform.password.data
+            
+            # using your model, query database for a user based on the username
+            # and password submitted
+            # store t3he result of that query to a `user` variable so it can be
+            # passed to the login_user() method.
+            user = Users.query.filter_by(username=username).first()
+            
+            # get user id, load into session
+            login_user(user)
+
+            # remember to flash a message to the user
+            msg = "Login Successful"
+            return jsonify (msg)
+    else:
+            msg = 'Username or Password is incorrect.'
+            return jsonify(msg, errors = form_errors(myform))
+            
+   
+
+@app.route("/api/auth/logout")
+@login_required
+def logout():
+    # Logout the user and end the session
+    logout_user()
+    msg = 'You have been logged out.'
+    return jsonify(msg)
 
 
 @app.route('/api/users/register', methods=['GET', 'POST'])
 def register():
-    """Render the website's register page."""
+    """Render the website's registration page."""
     
-    myform = MyForm()
+    myform = RegForm()
     
-    if request.method == 'POST':
-        if myform.validate_on_submit():
+    if request.method == 'POST' and myform.validate_on_submit():
         
-            username = myform.username.data
-            password = myform.password.data
-            firstname = myform.firstname.data
-            lastname = myform.lastname.data
-            email = myform.email.data
-            location = myform.location.data
-            biography = myform.biography.data
-            photo = myform.photo.data
-           
-            filename = secure_filename(photo.filename)
-            photo.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            
-            id = random.getrandbits(16) #str(uuid.uuid4())
-            joined_on = format_date_joined()
-     
-            
-            new_user = Users(username=username, password=password, firstname=firstname, lastname=lastname, email=email, location=location, biography=biography, photo=filename, id=id, joined_on=joined_on)
-            db.session.add(new_user)
-            db.session.commit()
-            
-            flash('Registration Successful!', 'success')
-            return redirect(url_for('/api/auth/login'))
-
-        flash_errors(myform)
-    return render_template('index.html', form=myform)
+        username = myform.username.data
+        password = myform.password.data
+        firstname = myform.firstname.data
+        lastname = myform.lastname.data
+        email = myform.email.data
+        location = myform.location.data
+        biography = myform.biography.data
+        photo = myform.photo.data
+       
+        filename = secure_filename(photo.filename)
+        photo.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        
+        id = random.getrandbits(16) 
+        joined_on = format_date_joined()
+ 
+        
+        new_user = Users(username=username, password=password, firstname=firstname, lastname=lastname, email=email, location=location, biography=biography, photo=filename, id=id, joined_on=joined_on)
+        db.session.add(new_user)
+        db.session.commit()
+        
+        msg = {"Registration Successful!"}
+        return jsonify(msg)
+    return jsonify(errors = form_errors(RegForm))
     
+    
+    
+@login_manager.user_loader
+def load_user(id):
+    return Users.query.get(int(id))
 
 ###
 # The functions below should be applicable to all Flask apps.
@@ -68,13 +108,18 @@ def format_date_joined():
     dtime = time.strftime("%B %d, %Y")
     return dtime
 
-def flash_errors(form):
+def form_errors(form):
+    error_messages = []
+    """Collects form errors"""
     for field, errors in form.errors.items():
         for error in errors:
-            flash(u"Error in the %s field - %s" % (
-                getattr(form, field).label.text,
-                error
-            ), 'danger')
+            message = u"Error in the %s field - %s" % (
+                    getattr(form, field).label.text,
+                    error
+                )
+            error_messages.append(message)
+
+    return error_messages
 
 @app.route('/<file_name>.txt')
 def send_text_file(file_name):
