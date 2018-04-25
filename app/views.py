@@ -9,7 +9,7 @@ import os, uuid, time, psycopg2, random
 from app import app, db, login_manager
 from flask import render_template, request, redirect, url_for, flash, session, abort, jsonify
 from werkzeug.utils import secure_filename
-from werkzeug.security import check_password_hash
+from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, logout_user, current_user, login_required
 
 from forms import RegForm, LoginForm
@@ -73,7 +73,7 @@ def register():
     if request.method == 'POST' and myform.validate_on_submit():
         
         username = myform.username.data
-        password = myform.password.data
+        password = generate_password_hash(myform.password.data)
         firstname = myform.firstname.data
         lastname = myform.lastname.data
         email = myform.email.data
