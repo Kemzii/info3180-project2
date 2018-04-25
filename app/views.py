@@ -56,10 +56,12 @@ def login():
 @app.route("/api/auth/logout")
 @login_required
 def logout():
-    # Logout the user and end the session
-    logout_user()
-    msg = 'You have been logged out.'
-    return jsonify(msg)
+    if request.method == 'GET':
+        # Logout the user and end the session
+        logout_user()
+        msg = 'You have been logged out.'
+        return jsonify(msg)
+    return jsonify("Bad Request")
 
 
 @app.route('/api/users/register', methods=['GET', 'POST'])
@@ -77,23 +79,38 @@ def register():
         email = myform.email.data
         location = myform.location.data
         biography = myform.biography.data
-        photo = myform.photo.data
+        profile_photo = myform.photo.data
        
-        filename = secure_filename(photo.filename)
-        photo.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        filename = secure_filename(profile_photo.filename)
+        profile_photo.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         
-        id = random.getrandbits(16) 
+        userid = random.getrandbits(16) 
         joined_on = format_date_joined()
+        
+        db.create_all()
+        db.session.commit()
  
         
-        new_user = Users(username=username, password=password, firstname=firstname, lastname=lastname, email=email, location=location, biography=biography, photo=filename, id=id, joined_on=joined_on)
+        new_user = Users(userid=userid, username=username, password=password, firstname=firstname, lastname=lastname, email=email, location=location, biography=biography, profile_photo=filename, joined_on=joined_on)
         db.session.add(new_user)
         db.session.commit()
         
-        msg = {"Registration Successful!"}
+        msg = { "message": "Registration Successful!" }
         return jsonify(msg)
-    return jsonify(errors = form_errors(RegForm))
+    return jsonify(errors=form_errors(myform))
     
+    
+@app.route("/api/posts", methods= ['GET'])
+@login_required
+def posts():
+    """Return all posts for all users"""
+    if request.method == 'GET':
+        
+        posts = Posts.query.all()
+        listposts = [ dlist(posts) for post in posts]
+        
+        return jsonify({'POSTS':listposts})
+    return jsonify(['Only GET requests are accepted'])
     
     
 @login_manager.user_loader
@@ -120,6 +137,29 @@ def form_errors(form):
             error_messages.append(message)
 
     return error_messages
+    
+def jsonerrors(errors):
+
+    """Return json errors"""
+    errors_list = []
+    for error in errors:
+        errors_list.append(dict({'error':error}))
+    return jsonify({'Errors':errors_list})    
+    
+    
+def dlist(data_object):
+
+    """Returns a dictionary list"""
+    
+    key_value_pairs   = data_object.__dict__.items()
+    object_dictionary = {}
+
+    for key,value in key_value_pairs:
+        if not key == '_sa_instance_state':
+        #All db ojects will have this but we do not need it here
+        # for example: ('_sa_instance_state', <sqlalchemy.orm.state.InstanceState object at 0x7f6696d831d0>)
+            object_dictionary[key] = value
+    return object_dictionary
 
 @app.route('/<file_name>.txt')
 def send_text_file(file_name):

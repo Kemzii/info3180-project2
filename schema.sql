@@ -35,6 +35,7 @@ create table follows (
     );
     
 create user "project2";
+alter database photogram owner to project2;
 \password project2
 testpass
-alter database photogram owner to project2;
+

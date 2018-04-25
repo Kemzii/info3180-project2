@@ -61,7 +61,7 @@ const Home = Vue.component('home', {
             <p> Share photos of your favourite moments with friends family and the world</p>
             
             <div id= "inbl1" >
-            <router-link to="register"  class="btn btn-primary">Register</router-link>
+            <router-link to="register"  class=" btn btn-success">Register</router-link>
             
             <router-link to="login"  class="btn btn-primary">Login</router-link>
             </div>
@@ -120,7 +120,7 @@ const Register = Vue.component('register', {
         let self = this;
         let RegForm = document.getElementById('RegForm');
         let form_data = new FormData(RegForm);
-        fetch('/api/users/register', {
+        fetch("/api/users/register", {
         method: 'POST',
         body : form_data,
         headers: {
@@ -133,7 +133,7 @@ const Register = Vue.component('register', {
         })
         .then(function (jsonResponse) {
         // display a success message
-            self.errors = jsonResponse.errors;
+            //self.errors = jsonResponse.errors;
             console.log(jsonResponse);
         })
         .catch(function (error) {

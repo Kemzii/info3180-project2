@@ -4,7 +4,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 class Users(db.Model):
     __tablename__ = 'users'
     
-    id = db.Column(db.Integer, primary_key=True)
+    userid = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True)
     password = db.Column(db.String(80))
     firstname = db.Column(db.String(80))
@@ -48,43 +48,43 @@ class Users(db.Model):
 class Posts(db.Model):
     __tablename__ = 'posts'
     
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    postid = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.userid'))
     photo = db.Column(db.String(255))
     caption = db.Column(db.String(80))
     created_on = db.Column(db.String(80))
 
     def get_id(self):
         try:
-            return unicode(self.userid)  # python 2 support
+            return unicode(self.postid)  # python 2 support
         except NameError:
-            return str(self.userid)  # python 3 support
+            return str(self.postid)  # python 3 support
 
 class Likes(db.Model):
     __tablename__ = 'likes'
     
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    post_id = db.Column(db.Integer, db.ForeignKey('posts.id'))
+    likeid = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.userid'))
+    post_id = db.Column(db.Integer, db.ForeignKey('posts.postid'))
 
 
     def get_id(self):
         try:
-            return unicode(self.userid)  # python 2 support
+            return unicode(self.likeid)  # python 2 support
         except NameError:
-            return str(self.userid)  # python 3 support
+            return str(self.likeid)  # python 3 support
 
 class Follows(db.Model):
     __tablename__ = 'follows'
     
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    follower_ido = db.Column(db.Integer)
+    followid = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.userid'))
+    follower_id = db.Column(db.Integer)
     
     def get_id(self):
         try:
-            return unicode(self.userid)  # python 2 support
+            return unicode(self.followid)  # python 2 support
         except NameError:
-            return str(self.userid)  # python 3 support
+            return str(self.followid)  # python 3 support
 
 
