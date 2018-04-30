@@ -5,6 +5,10 @@
     padding: 10px;
 }
 
+.container {
+    position: relative;
+}
+
 .icon {
     width: 3%;
     height: 3%;
@@ -48,7 +52,9 @@ header ul {
     top: 155px;
     bottom: 0;
 }
-
+#floaty{
+    
+}
 #spesh {
     position: relative;
     display: inline-block;
@@ -70,6 +76,37 @@ header ul {
     padding: 3px;
     
 }
+.jumbotron{
+    background-color: white;
+    width:30em;
+    height: inherit;
+
+}
+
+.postuserphoto{
+    padding-left:5%; 
+    width:12%; 
+    height:12%
+}
+
+.shadow {
+    box-shadow: 5px 5px 25px #888888;
+}
+
+.followbutton{
+  padding-left:30%;
+}
+
+.displayphoto{
+    width:10em;
+    height:10em;
+}
+
+.postphotos{
+    width:300px;
+    height:300px;
+}
+
 #links {
     float: right;
 }
@@ -81,4 +118,15 @@ footer
 
 #gram {
     font-family: 'Lobster', cursive;
+}
+.postimages{
+    width:100%; 
+    height:100%;
+}
+
+#newpost {
+    float: right;
+}
+#logout {
+    margin: auto;
 }

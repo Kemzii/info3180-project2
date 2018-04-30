@@ -19,3 +19,10 @@ class RegForm(FlaskForm):
 class LoginForm(FlaskForm):
     username = TextField('Username', validators=[DataRequired()])
     password = TextField('Password', validators=[DataRequired()])
+    
+class PostForm(FlaskForm):
+    photo = photo = FileField('Photo', validators=[
+        FileRequired(),
+        FileAllowed(['jpg', 'png', 'Images only!'])
+    ])
+    caption=TextAreaField('Caption', validators=[DataRequired()])

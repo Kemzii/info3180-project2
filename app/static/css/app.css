@@ -2,3 +2,33 @@ body {
     padding-top: 5rem;
 }
 
+.cardrow{
+    box-shadow: 0.5px 0.5px 10px grey;
+    border-radius: 2px;
+    padding: 24px;
+}
+#logout{
+    width:300px;
+    box-shadow: 0.5px 0.5px 10px grey;
+    border-radius: 18px;
+    padding: 17px;
+}
+
+button{
+    background-color: #008CBA;
+    border: none;
+    color: white;
+    padding: 5px 10px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 18px;
+    margin: 3px 1px;
+    border-radius:40%;
+}
+button:active {
+  background-color: #3e8e41;
+  transform: translateY(4px);
+}
+
+
+

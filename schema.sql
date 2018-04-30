@@ -2,7 +2,7 @@ drop database if exists photogram;
 create database photogram;
 
 create table posts (
-    id varchar primary key,
+    postid varchar primary key,
     user_id varchar(255) not null,
     photo varchar(255) not null,
     caption varchar(255) not null,
@@ -23,13 +23,13 @@ create table users (
     );
     
 create table likes (
-    id varchar primary key,
+    likeid varchar primary key,
     user_id varchar(255) not null,
     post_id varchar(255) not null
     );
     
 create table follows (
-    id varchar primary key,
+    followid varchar primary key,
     user_id varchar(255) not null,
     follower_id varchar(255) not null
     );

@@ -12,3 +12,9 @@ Flask-Script
 Flask-WTF
 Flask-SQLAlchemy
 psycopg2
+appdirs==1.4.3
+Flask-JWT==0.3.2
+packaging==16.8
+PyJWT==1.4.2
+pyparsing==2.2.0
+six==1.10.0
